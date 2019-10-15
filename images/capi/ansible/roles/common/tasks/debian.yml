@@ -36,6 +36,7 @@
 
 - name: update apt cache
   become: yes
+  become_method: sudo
   apt:
     force_apt_get: True
     update_cache: True
@@ -43,12 +44,14 @@
 
 - name: perform a dist-upgrade
   become: yes
+  become_method: sudo
   apt:
     force_apt_get: True
     upgrade: dist
 
 - name: install baseline dependencies
   become: yes
+  become_method: sudo
   apt:
     force_apt_get: True
     name: "{{ common_debs }}"
@@ -56,6 +59,7 @@
 
 - name: install extra debs
   become: yes
+  become_method: sudo
   apt:
     force_apt_get: True
     name: "{{ common_extra_debs }}"
@@ -63,6 +67,7 @@
 
 - name: install pinned debs
   become: yes
+  become_method: sudo
   apt:
     force_apt_get: True
     name: "{{ common_pinned_debs }}"

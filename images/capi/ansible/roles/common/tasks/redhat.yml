@@ -14,6 +14,7 @@
 ---
 - name: add epel repo
   become: yes
+  become_method: sudo
   yum:
     name: "{{ common_redhat_epel_rpm }}"
     state: present
@@ -21,6 +22,7 @@
 
 - name: Find existing repo files
   become: yes
+  become_method: sudo
   find:
     depth: 1
     paths: /etc/yum.repos.d
@@ -29,11 +31,13 @@
   when: disable_public_repos|bool
 
 - name: Disable repos
+  become_method: sudo
   command: "mv {{ item.path }} {{ item.path }}.disabled"
   loop: "{{ repo_files.files }}"
   when: disable_public_repos|bool
 
 - name: Install extra repos
+  become_method: sudo
   copy:
     src: "{{ item }}"
     dest: "/etc/yum.repos.d/{{ item | basename }}"
@@ -41,6 +45,7 @@
   when: extra_repos != ""
 
 - name: perform a yum update
+  become_method: sudo
   yum:
     name: '*'
     state: latest
@@ -48,11 +53,13 @@
 
 - name: install baseline dependencies
   yum:
+  become_method: sudo
     name: "{{ common_rpms }}"
     state: present
     lock_timeout: 60
 
 - name: install extra rpms
+  become_method: sudo
   yum:
     name: "{{ common_extra_rpms }}"
     state: present
